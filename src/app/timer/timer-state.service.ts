@@ -12,6 +12,7 @@ export interface TimerState {
   maxWorkoutRounds: number;
   workoutMode: WorkoutMode;
   timerMode: TimerMode;
+  currentPercentage: number;
 }
 
 
@@ -20,13 +21,14 @@ export interface TimerState {
 })
 export class TimerStateService {
   private initState: TimerState = {
-    currentTimeInSeconds: 5,
-    maxWorkoutTimeInSeconds: 5,
-    maxRestTimeInSeconds: 3,
+    currentTimeInSeconds: 45,
+    maxWorkoutTimeInSeconds: 45,
+    maxRestTimeInSeconds: 15,
     currentWorkoutRounds: 1,
-    maxWorkoutRounds: 3,
+    maxWorkoutRounds: 10,
     workoutMode: 'Workout',
-    timerMode: 'Start'
+    timerMode: 'Start',
+    currentPercentage: 0
   }
 
   private getInitState(): TimerState {
@@ -62,15 +64,23 @@ export class TimerStateService {
     }
   }
 
+  private getCurrentPercentage(state: TimerState): number {
+    return state.workoutMode === 'Workout' ?
+      (state.maxWorkoutTimeInSeconds - state.currentTimeInSeconds) / state.maxWorkoutTimeInSeconds * 100 :
+      (state.maxRestTimeInSeconds - state.currentTimeInSeconds) / state.maxRestTimeInSeconds * 100;
+  }
+
   private handleCurrentWorkoutMode(state: TimerState) {
     if (state.workoutMode === 'Workout' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
       state.workoutMode = 'Rest';
       state.currentTimeInSeconds = state.maxRestTimeInSeconds;
+      state.currentPercentage = 0;
     }
     else if (state.workoutMode === 'Rest' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
       state.currentWorkoutRounds += 1;
       state.currentTimeInSeconds = state.maxWorkoutTimeInSeconds;
       state.workoutMode = 'Workout';
+      state.currentPercentage = 0;
     }
     else {
       this.stopTimer();
@@ -80,12 +90,7 @@ export class TimerStateService {
   private decreaseCurrentTimeInSeconds(){
     const currentState = this.timerStateSubject.getValue();
     currentState.currentTimeInSeconds = currentState.currentTimeInSeconds -1;
-    this.timerStateSubject.next(currentState);
-  }
-
-  private setCurrentTimeInSeconds(currentTimeInSeconds: number) {
-    const currentState = this.timerStateSubject.getValue();
-    currentState.currentTimeInSeconds = currentTimeInSeconds;
+    currentState.currentPercentage = this.getCurrentPercentage(currentState);
     this.timerStateSubject.next(currentState);
   }
 

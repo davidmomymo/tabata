@@ -1,11 +1,15 @@
-import {Component, input} from '@angular/core';
+import {Component, input, ModuleWithProviders} from '@angular/core';
 import {TimerState} from '../timer/timer-state.service';
 import {NgClass} from '@angular/common';
+import {NgCircleProgressModule} from 'ng-circle-progress';
 
 @Component({
   selector: 'app-display-time',
   imports: [
-    NgClass
+    NgClass, NgCircleProgressModule
+  ],
+  providers: [
+    (NgCircleProgressModule.forRoot({}) as ModuleWithProviders<NgCircleProgressModule>).providers!,
   ],
   templateUrl: './display-time.component.html',
   styleUrl: './display-time.component.scss'
