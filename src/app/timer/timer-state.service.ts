@@ -44,7 +44,6 @@ export class TimerStateService {
 
   runTimer(){
     if(this.currentTimeoutId){
-      console.log('current Timeout Id existing');
       return;
     }
 
@@ -55,7 +54,6 @@ export class TimerStateService {
 
   private manageCurrentWorkoutState(){
     const currentState = this.timerStateSubject.getValue();
-    console.log('current State', currentState);
     currentState.timerMode = 'Running';
     this.timerStateSubject.next(currentState);
     if (currentState.currentTimeInSeconds === 0) {
