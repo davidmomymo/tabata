@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component} from '@angular/core';
 import {DisplayTimeComponent} from '../display-time/display-time.component';
 import {ButtonRoundedComponent} from '../button-rounded/button-rounded.component';
 import {TimerState, TimerStateService} from './timer-state.service';
@@ -22,7 +22,15 @@ export class TimerComponent {
     this.currentTimerState$ = this.timerStateService.timerState$;
   }
 
-  startTimer(){
-    this.timerStateService.startTimer();
+  runTimer(){
+    this.timerStateService.runTimer();
+  }
+
+  stopTimer(){
+    this.timerStateService.stopTimer();
+  }
+
+  restartTimer(){
+    this.timerStateService.restartTimer();
   }
 }

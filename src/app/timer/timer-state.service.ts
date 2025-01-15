@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 export type WorkoutMode = 'Workout' | 'Rest';
+export type TimerMode = 'Start' | 'Running' | 'Stop';
 
 export interface TimerState {
   currentTimeInSeconds: number;
@@ -9,7 +10,8 @@ export interface TimerState {
   maxRestTimeInSeconds: number;
   currentWorkoutRounds: number;
   maxWorkoutRounds: number;
-  mode: WorkoutMode;
+  workoutMode: WorkoutMode;
+  timerMode: TimerMode;
 }
 
 
@@ -17,25 +19,31 @@ export interface TimerState {
   providedIn: 'root'
 })
 export class TimerStateService {
-  private getStartState: TimerState = {
+  private initState: TimerState = {
     currentTimeInSeconds: 5,
     maxWorkoutTimeInSeconds: 5,
     maxRestTimeInSeconds: 3,
     currentWorkoutRounds: 1,
     maxWorkoutRounds: 3,
-    mode: 'Workout'
+    workoutMode: 'Workout',
+    timerMode: 'Start'
   }
 
-  private timerStateSubject= new BehaviorSubject<TimerState>(this.getStartState);
+  private getInitState(): TimerState {
+    return {...this.initState};
+  }
+
+  private timerStateSubject= new BehaviorSubject<TimerState>(this.getInitState());
   timerState$ = this.timerStateSubject.asObservable();
   private currentTimeoutId?: ReturnType<typeof setInterval> = undefined;
   constructor() { }
 
-  startTimer(){
+  runTimer(){
     if(this.currentTimeoutId){
       console.log('current Timeout Id existing');
       return;
     }
+
     this.currentTimeoutId = setInterval(() => {
       this.manageCurrentWorkoutState()
     },1000);
@@ -44,23 +52,25 @@ export class TimerStateService {
   private manageCurrentWorkoutState(){
     const currentState = this.timerStateSubject.getValue();
     console.log('current State', currentState);
+    currentState.timerMode = 'Running';
+    this.timerStateSubject.next(currentState);
     if (currentState.currentTimeInSeconds === 0) {
-      this.handleCurrentMode(currentState);
+      this.handleCurrentWorkoutMode(currentState);
     }
     else {
       this.decreaseCurrentTimeInSeconds();
     }
   }
 
-  private handleCurrentMode(state: TimerState) {
-    if (state.mode === 'Workout' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
-      state.mode = 'Rest';
+  private handleCurrentWorkoutMode(state: TimerState) {
+    if (state.workoutMode === 'Workout' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
+      state.workoutMode = 'Rest';
       state.currentTimeInSeconds = state.maxRestTimeInSeconds;
     }
-    else if (state.mode === 'Rest' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
+    else if (state.workoutMode === 'Rest' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
       state.currentWorkoutRounds += 1;
       state.currentTimeInSeconds = state.maxWorkoutTimeInSeconds;
-      state.mode = 'Workout';
+      state.workoutMode = 'Workout';
     }
     else {
       this.stopTimer();
@@ -81,5 +91,15 @@ export class TimerStateService {
 
   stopTimer(){
     clearInterval(this.currentTimeoutId);
+    this.currentTimeoutId = undefined;
+    const currentState = this.timerStateSubject.getValue();
+    currentState.timerMode = 'Stop';
+    this.timerStateSubject.next(currentState);
+  }
+
+  restartTimer(){
+    clearInterval(this.currentTimeoutId);
+    this.currentTimeoutId = undefined;
+    this.timerStateSubject.next(this.getInitState());
   }
 }

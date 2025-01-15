@@ -1,10 +1,22 @@
 @if (currentTimerState$ | async; as currentTimerState) {
-  <div class="flex flex-col flex-grow min-h-0  items-center" [ngClass]="{'bg-emerald-700': currentTimerState.mode === 'Workout', 'bg-rose-700': currentTimerState.mode === 'Rest'}">
+  <div class="flex flex-col flex-grow min-h-0  items-center" [ngClass]="{'text-emerald-50 bg-emerald-700': currentTimerState.workoutMode === 'Workout', 'bg-rose-700 text-rose-50': currentTimerState.workoutMode === 'Rest'}">
+    <div class="mt-24 text-4xl font-bold">{{currentTimerState.workoutMode === 'Workout' ? 'Workout' : 'Rest' }}</div>
     <div class="flex flex-col flex-grow min-h-0 justify-center">
       <app-display-time [timerState]="currentTimerState"></app-display-time>
     </div>
-    <div class="mb-8">
-      <app-button-rounded (click)="startTimer()" [title]="'Start'" [timerState]="currentTimerState"></app-button-rounded>
+    <div class="mb-20">
+      @if (currentTimerState.timerMode === 'Start') {
+        <app-button-rounded (click)="runTimer()" [title]="'Start'" [timerState]="currentTimerState"></app-button-rounded>
+      }
+      @if (currentTimerState.timerMode === 'Running') {
+        <app-button-rounded (click)="stopTimer()" [title]="'Stop'" [timerState]="currentTimerState"></app-button-rounded>
+      }
+      @if (currentTimerState.timerMode === 'Stop') {
+        <div class="flex flex-row space-x-5">
+          <app-button-rounded (click)="runTimer()" [title]="'Resume'" [timerState]="currentTimerState"></app-button-rounded>
+          <app-button-rounded (click)="restartTimer()" [title]="'Restart'" [timerState]="currentTimerState"></app-button-rounded>
+        </div>
+      }
     </div>
   </div>
 }

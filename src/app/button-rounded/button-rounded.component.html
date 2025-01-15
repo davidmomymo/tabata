@@ -1,2 +1,2 @@
 <div class="text-lg font-bold py-2 px-8 rounded-2xl"
-     [ngClass]="{'bg-gray-50 text-emerald-700': timerState().mode === 'Workout', 'bg-rose-50 text-rose-700': timerState().mode === 'Rest'}">{{ title() }}</div>
+     [ngClass]="{'bg-gray-50 text-emerald-700': timerState().workoutMode === 'Workout', 'bg-rose-50 text-rose-700': timerState().workoutMode === 'Rest'}">{{ title() }}</div>
