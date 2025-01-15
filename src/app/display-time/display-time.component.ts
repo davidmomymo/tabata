@@ -1,12 +1,12 @@
 import {Component, input, ModuleWithProviders} from '@angular/core';
 import {TimerState} from '../timer/timer-state.service';
-import {NgClass} from '@angular/common';
+import {DecimalPipe, NgClass} from '@angular/common';
 import {NgCircleProgressModule} from 'ng-circle-progress';
 
 @Component({
   selector: 'app-display-time',
   imports: [
-    NgClass, NgCircleProgressModule
+    NgClass, NgCircleProgressModule, DecimalPipe
   ],
   providers: [
     (NgCircleProgressModule.forRoot({}) as ModuleWithProviders<NgCircleProgressModule>).providers!,

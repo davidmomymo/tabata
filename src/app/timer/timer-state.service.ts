@@ -31,6 +31,8 @@ export class TimerStateService {
     currentPercentage: 0
   }
 
+  private intervalTimeInMilliseconds = 100;
+
   private getInitState(): TimerState {
     return {...this.initState};
   }
@@ -48,7 +50,7 @@ export class TimerStateService {
 
     this.currentTimeoutId = setInterval(() => {
       this.manageCurrentWorkoutState()
-    },1000);
+    },this.intervalTimeInMilliseconds);
   }
 
   private manageCurrentWorkoutState(){
@@ -89,7 +91,7 @@ export class TimerStateService {
 
   private decreaseCurrentTimeInSeconds(){
     const currentState = this.timerStateSubject.getValue();
-    currentState.currentTimeInSeconds = currentState.currentTimeInSeconds -1;
+    currentState.currentTimeInSeconds -= this.intervalTimeInMilliseconds / 1000 ;
     currentState.currentPercentage = this.getCurrentPercentage(currentState);
     this.timerStateSubject.next(currentState);
   }

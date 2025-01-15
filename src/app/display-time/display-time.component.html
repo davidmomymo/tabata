@@ -12,11 +12,11 @@
                    [startFromZero]="false"
                    [lazy]="false"
                    [animation]="true"
-                   [animationDuration]="300">
+                   [animationDuration]="200">
   </circle-progress>
   <div class="flex flex-col justify-center items-center rounded-full w-64 h-64"
        [ngClass]="{'bg-emerald-50 text-emerald-700': timerState().workoutMode === 'Workout', 'bg-rose-50 text-rose-700': timerState().workoutMode === 'Rest'}">
-    <div class="text-6xl font-bold">{{ timerState().currentTimeInSeconds }}</div>
+    <div class="text-6xl font-bold">{{ timerState().currentTimeInSeconds | number : '1.0-0' }}</div>
     <div class="mt-4">Round {{ timerState().currentWorkoutRounds }} of {{ timerState().maxWorkoutRounds }}</div>
   </div>
 </div>
