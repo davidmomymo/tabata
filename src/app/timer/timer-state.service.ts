@@ -31,7 +31,7 @@ export class TimerStateService {
     currentPercentage: 0
   }
 
-  private intervalTimeInMilliseconds = 100;
+  private intervalTimeInMilliseconds = 10;
 
   private getInitState(): TimerState {
     return {...this.initState};
@@ -56,7 +56,7 @@ export class TimerStateService {
     const currentState = this.timerStateSubject.getValue();
     currentState.timerMode = 'Running';
     this.timerStateSubject.next(currentState);
-    if (currentState.currentTimeInSeconds === 0) {
+    if (currentState.currentTimeInSeconds === 0 || currentState.currentTimeInSeconds < 0) {
       this.handleCurrentWorkoutMode(currentState);
     }
     else {
