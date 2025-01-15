@@ -1,4 +1,5 @@
-<div class="flex flex-col justify-center items-center rounded-full p-24 bg-emerald-50 text-emerald-700">
-  <div class="text-6xl font-bold">{{startTime()}}</div>
-  <div class="mt-4">Round 1 of 8</div>
+<div class="flex flex-col justify-center items-center rounded-full p-24"
+      [ngClass]="{'bg-emerald-50 text-emerald-700': timerState().mode === 'Workout', 'bg-rose-50 text-rose-700': timerState().mode === 'Rest'}">
+  <div class="text-6xl font-bold">{{ timerState().currentTimeInSeconds }}</div>
+  <div class="mt-4">Round {{ timerState().currentWorkoutRounds }} of {{ timerState().maxWorkoutRounds }}</div>
 </div>

@@ -1,8 +1,10 @@
-<div class="flex flex-col flex-grow min-h-0 bg-emerald-700 items-center">
-  <div class="flex flex-col flex-grow min-h-0 justify-center">
-    <app-display-time [startTime]="10"></app-display-time>
+@if (currentTimerState$ | async; as currentTimerState) {
+  <div class="flex flex-col flex-grow min-h-0  items-center" [ngClass]="{'bg-emerald-700': currentTimerState.mode === 'Workout', 'bg-rose-700': currentTimerState.mode === 'Rest'}">
+    <div class="flex flex-col flex-grow min-h-0 justify-center">
+      <app-display-time [timerState]="currentTimerState"></app-display-time>
+    </div>
+    <div class="mb-8">
+      <app-button-rounded (click)="startTimer()" [title]="'Start'" [timerState]="currentTimerState"></app-button-rounded>
+    </div>
   </div>
-  <div class="mb-8">
-    <app-button-rounded [title]="'Start'"></app-button-rounded>
-  </div>
-</div>
+}

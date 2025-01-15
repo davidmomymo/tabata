@@ -1,11 +1,15 @@
 import {Component, input} from '@angular/core';
+import {TimerState} from '../timer/timer-state.service';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-display-time',
-  imports: [],
+  imports: [
+    NgClass
+  ],
   templateUrl: './display-time.component.html',
   styleUrl: './display-time.component.scss'
 })
 export class DisplayTimeComponent {
-  startTime = input.required<number>();
+  timerState = input.required<TimerState>();
 }
