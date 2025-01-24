@@ -15,17 +15,27 @@ export interface TimerState {
   currentPercentage: number;
 }
 
+export interface TimerSettings {
+  maxWorkoutTimeInSeconds: number;
+  maxRestTimeInSeconds: number;
+  maxWorkoutRounds: number;
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimerStateService {
+  private maxWorkoutRounds = 10;
+  private maxWorkoutTimeInSeconds = 45;
+  private maxRestTimeInSeconds = 15;
+
   private initState: TimerState = {
     currentTimeInSeconds: 45,
-    maxWorkoutTimeInSeconds: 45,
-    maxRestTimeInSeconds: 15,
+    maxWorkoutTimeInSeconds: this.maxWorkoutTimeInSeconds,
+    maxRestTimeInSeconds: this.maxRestTimeInSeconds,
     currentWorkoutRounds: 1,
-    maxWorkoutRounds: 10,
+    maxWorkoutRounds: this.maxWorkoutRounds,
     workoutMode: 'Workout',
     timerMode: 'Start',
     currentPercentage: 0
@@ -35,6 +45,10 @@ export class TimerStateService {
 
   private getInitState(): TimerState {
     return {...this.initState};
+  }
+
+  getTimerState(): TimerState {
+    return this.timerStateSubject.getValue();
   }
 
   private timerStateSubject= new BehaviorSubject<TimerState>(this.getInitState());
@@ -106,5 +120,19 @@ export class TimerStateService {
     clearInterval(this.currentTimeoutId);
     this.currentTimeoutId = undefined;
     this.timerStateSubject.next(this.getInitState());
+  }
+
+  setSettings(timerSettings: TimerSettings) {
+    const currentState = this.timerStateSubject.getValue();
+    currentState.maxWorkoutRounds = timerSettings.maxWorkoutRounds;
+    currentState.maxWorkoutTimeInSeconds = timerSettings.maxWorkoutTimeInSeconds;
+    currentState.maxRestTimeInSeconds = timerSettings.maxRestTimeInSeconds;
+    this.timerStateSubject.next(currentState);
+  }
+
+  setMaxWorkoutRounds(maxWorkoutRounds: number){
+    const currentState = this.timerStateSubject.getValue();
+    currentState.maxWorkoutRounds = maxWorkoutRounds;
+    this.timerStateSubject.next(currentState);
   }
 }

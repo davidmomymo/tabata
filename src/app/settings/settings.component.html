@@ -1,1 +1,12 @@
-<p>settings works!</p>
+@if (form) {
+  <div class="flex flex-col flex-grow min-h-0 ">
+    <form [formGroup]="form">
+      <app-settings-field [formControlName]="'maxWorkoutRounds'"></app-settings-field>
+      <app-settings-field [formControlName]="'maxWorkoutTimeInSeconds'"></app-settings-field>
+      <app-settings-field [formControlName]="'maxRestTimeInSeconds'"></app-settings-field>
+    </form>
+
+    <app-button-rounded (click)="save()" class="flex flex-col justify-items-end" [timerState]="timerState"
+                        [title]="'Save'"></app-button-rounded>
+  </div>
+}
