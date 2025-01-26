@@ -29,12 +29,14 @@ export class TimerStateService {
   private maxWorkoutRounds = 10;
   private maxWorkoutTimeInSeconds = 45;
   private maxRestTimeInSeconds = 15;
+  private currentWorkoutRounds = 1;
+  private currentTimeInSeconds = 45;
 
   private initState: TimerState = {
-    currentTimeInSeconds: 45,
+    currentTimeInSeconds: this.currentTimeInSeconds,
     maxWorkoutTimeInSeconds: this.maxWorkoutTimeInSeconds,
     maxRestTimeInSeconds: this.maxRestTimeInSeconds,
-    currentWorkoutRounds: 1,
+    currentWorkoutRounds: this.currentWorkoutRounds,
     maxWorkoutRounds: this.maxWorkoutRounds,
     workoutMode: 'Workout',
     timerMode: 'Start',
@@ -85,6 +87,7 @@ export class TimerStateService {
   }
 
   private handleCurrentWorkoutMode(state: TimerState) {
+    debugger;
     if (state.workoutMode === 'Workout' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
       state.workoutMode = 'Rest';
       state.currentTimeInSeconds = state.maxRestTimeInSeconds;
@@ -119,20 +122,35 @@ export class TimerStateService {
   restartTimer(){
     clearInterval(this.currentTimeoutId);
     this.currentTimeoutId = undefined;
+    const initState = this.getInitState();
+    console.log(initState);
     this.timerStateSubject.next(this.getInitState());
   }
 
   setSettings(timerSettings: TimerSettings) {
-    const currentState = this.timerStateSubject.getValue();
+    /*const currentState = this.timerStateSubject.getValue();
     currentState.maxWorkoutRounds = timerSettings.maxWorkoutRounds;
     currentState.maxWorkoutTimeInSeconds = timerSettings.maxWorkoutTimeInSeconds;
     currentState.maxRestTimeInSeconds = timerSettings.maxRestTimeInSeconds;
-    this.timerStateSubject.next(currentState);
+    this.timerStateSubject.next(currentState);*/
+    this.maxWorkoutRounds = timerSettings.maxWorkoutRounds;
+    this.maxWorkoutTimeInSeconds = timerSettings.maxWorkoutTimeInSeconds;
+    this.maxRestTimeInSeconds = timerSettings.maxRestTimeInSeconds;
+    this.currentTimeInSeconds = timerSettings.maxWorkoutTimeInSeconds;
+    this.updateInitState();
+    this.restartTimer();
   }
 
-  setMaxWorkoutRounds(maxWorkoutRounds: number){
-    const currentState = this.timerStateSubject.getValue();
-    currentState.maxWorkoutRounds = maxWorkoutRounds;
-    this.timerStateSubject.next(currentState);
+  updateInitState(){
+    this.initState = {
+      currentTimeInSeconds: this.currentTimeInSeconds,
+      maxWorkoutTimeInSeconds: this.maxWorkoutTimeInSeconds,
+      maxRestTimeInSeconds: this.maxRestTimeInSeconds,
+      currentWorkoutRounds: this.currentWorkoutRounds,
+      maxWorkoutRounds: this.maxWorkoutRounds,
+      workoutMode: 'Workout',
+      timerMode: 'Start',
+      currentPercentage: 0
+    };
   }
 }

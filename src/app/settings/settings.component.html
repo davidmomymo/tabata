@@ -1,9 +1,9 @@
 @if (form) {
   <div class="flex flex-col flex-grow min-h-0 ">
     <form [formGroup]="form">
-      <app-settings-field [formControlName]="'maxWorkoutRounds'"></app-settings-field>
-      <app-settings-field [formControlName]="'maxWorkoutTimeInSeconds'"></app-settings-field>
-      <app-settings-field [formControlName]="'maxRestTimeInSeconds'"></app-settings-field>
+      <app-settings-field [title]="'Max. Workout Rounds'" [formControlName]="'maxWorkoutRounds'"></app-settings-field>
+      <app-settings-field [title]="'Max. Workout Time in Seconds'" [formControlName]="'maxWorkoutTimeInSeconds'"></app-settings-field>
+      <app-settings-field [title]="'Max. Rest Time in Seconds'" [formControlName]="'maxRestTimeInSeconds'"></app-settings-field>
     </form>
 
     <app-button-rounded (click)="save()" class="flex flex-col justify-items-end" [timerState]="timerState"

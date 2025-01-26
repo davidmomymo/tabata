@@ -1,4 +1,4 @@
 <div *ngIf="formControl">
-  <div>Set Workout Rounds: </div>
-  <input [placeholder]="formControl.value" [formControl]="formControl">
+  <div>{{ title()}}</div>
+  <input type="number" [placeholder]="formControl.value" [formControl]="formControl">
 </div>

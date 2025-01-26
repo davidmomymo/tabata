@@ -1,4 +1,4 @@
-import {Component, forwardRef, inject, Input, OnInit} from '@angular/core';
+import {Component, forwardRef, inject, input, Input, OnInit} from '@angular/core';
 import {
   ControlContainer,
   ControlValueAccessor,
@@ -26,28 +26,29 @@ import {NgIf} from '@angular/common';
 })
 export class SettingsFieldComponent implements ControlValueAccessor, OnInit {
   @Input() formControlName!: string;
+  title = input.required<string>();
 
-  private controlContainer = inject(ControlContainer, { optional: true });
+  private controlContainer = inject(ControlContainer, {optional: true});
 
-  formControl!: FormControl<string>;
+  formControl!: FormControl<number>;
 
 
   ngOnInit(): void {
     if (this.formControlName && this.controlContainer) {
-      this.formControl = (this.controlContainer.control?.get(this.formControlName) as FormControl<string>) ?? null;
+      this.formControl = (this.controlContainer.control?.get(this.formControlName) as FormControl<number>) ?? null;
     }
   }
 
 
-  writeValue(obj: any): void {
+  writeValue(): void {
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(): void {
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(): void {
   }
 
-  setDisabledState?(isDisabled: boolean): void {
+  setDisabledState?(): void {
   }
 }
