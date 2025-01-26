@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
 import {SideMenuState, SideMenuStateService} from './side-menu-state.service';
-import {AsyncPipe} from '@angular/common';
+import {AsyncPipe, NgClass} from '@angular/common';
 import {Observable} from 'rxjs';
 import {TimerState, TimerStateService} from '../timer/timer-state.service';
-import {ButtonRoundedComponent} from '../button-rounded/button-rounded.component';
+import {faGear} from '@fortawesome/free-solid-svg-icons';
+import {faClock} from '@fortawesome/free-regular-svg-icons';
+import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-side-menu',
   imports: [
     AsyncPipe,
-    ButtonRoundedComponent
+    FaIconComponent,
+    NgClass
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss'
@@ -24,6 +27,9 @@ export class SideMenuComponent {
   }
 
   async executeSideButton(): Promise<void> {
-    await this.sideMenuStateService.switchState();
+    await this.sideMenuStateService.execute();
   }
+
+  protected readonly faClock = faClock;
+  protected readonly faGear = faGear;
 }

@@ -3,6 +3,7 @@ import {TimerSettings, TimerState, TimerStateService} from '../timer/timer-state
 import {ButtonRoundedComponent} from '../button-rounded/button-rounded.component';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SettingsFieldComponent} from '../settings-field/settings-field.component';
+import {SideMenuStateService} from '../side-menu/side-menu-state.service';
 
 @Component({
   selector: 'app-settings',
@@ -20,12 +21,13 @@ export class SettingsComponent implements OnInit {
   timerState!: TimerState;
   form!: FormGroup;
 
-  constructor(private timerStateService: TimerStateService, private formBuilder: FormBuilder) {
+  constructor(private timerStateService: TimerStateService, private formBuilder: FormBuilder, private sideMenuService: SideMenuStateService) {
 
   }
 
   ngOnInit(): void {
     this.timerStateService.setWorkoutMode('Settings');
+    this.sideMenuService.setState('Settings');
     const timerState = this.timerStateService.getTimerState();
     this.timerState = timerState;
     this.form = this.formBuilder.group(
@@ -42,12 +44,13 @@ export class SettingsComponent implements OnInit {
     };
   }
 
-  save() {
+  async save() {
     const res: TimerSettings = {
       maxRestTimeInSeconds: this.form.get('maxRestTimeInSeconds')?.value,
       maxWorkoutRounds: this.form.get('maxWorkoutRounds')?.value,
       maxWorkoutTimeInSeconds: this.form.get('maxWorkoutTimeInSeconds')?.value,
     }
     this.timerStateService.setSettings(res);
+    await this.sideMenuService.execute();
   }
 }

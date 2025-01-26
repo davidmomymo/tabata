@@ -14,8 +14,9 @@ export class SideMenuStateService {
   constructor(private router: Router) {
   }
 
-  async switchState(){
+  async execute(){
     const currentState = this.sideMenuStateSubject.value;
+    console.log(currentState);
     if (currentState === 'Timer') {
       this.setState('Settings')
       await this.router.navigate(['settings']);
@@ -26,7 +27,7 @@ export class SideMenuStateService {
     }
   }
 
-  private setState(state: SideMenuState) {
+  public setState(state: SideMenuState) {
     this.sideMenuStateSubject.next(state);
   }
 }
