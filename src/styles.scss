@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 html, body {
-  @apply flex flex-col h-full;
-}
-
-body {
+  @apply flex flex-col h-screen;
   overscroll-behavior: none;
 }
