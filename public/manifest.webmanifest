@@ -1,8 +1,6 @@
 {
-  "name": "client",
-  "short_name": "client",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "name": "Tabata Timer",
+  "short_name": "Tabata Timer",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
