@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DisplayTimeComponent} from '../display-time/display-time.component';
 import {ButtonRoundedComponent} from '../button-rounded/button-rounded.component';
 import {TimerState, TimerStateService} from './timer-state.service';
@@ -16,21 +16,26 @@ import {AsyncPipe, NgClass} from '@angular/common';
   templateUrl: './timer.component.html',
   styleUrl: './timer.component.scss'
 })
-export class TimerComponent {
+export class TimerComponent implements OnInit {
   currentTimerState$: Observable<TimerState>;
+
   constructor(private timerStateService: TimerStateService) {
     this.currentTimerState$ = this.timerStateService.timerState$;
   }
 
-  runTimer(){
+  ngOnInit(): void {
+    this.timerStateService.setWorkoutMode('Workout');
+  }
+
+  runTimer() {
     this.timerStateService.runTimer();
   }
 
-  stopTimer(){
+  stopTimer() {
     this.timerStateService.stopTimer();
   }
 
-  restartTimer(){
+  restartTimer() {
     this.timerStateService.restartTimer();
   }
 }

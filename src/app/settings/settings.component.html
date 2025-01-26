@@ -1,12 +1,17 @@
 @if (form) {
-  <div class="flex flex-col flex-grow min-h-0 ">
-    <form [formGroup]="form">
-      <app-settings-field [title]="'Max. Workout Rounds'" [formControlName]="'maxWorkoutRounds'"></app-settings-field>
-      <app-settings-field [title]="'Max. Workout Time in Seconds'" [formControlName]="'maxWorkoutTimeInSeconds'"></app-settings-field>
-      <app-settings-field [title]="'Max. Rest Time in Seconds'" [formControlName]="'maxRestTimeInSeconds'"></app-settings-field>
-    </form>
-
-    <app-button-rounded (click)="save()" class="flex flex-col justify-items-end" [timerState]="timerState"
+  <div class="flex flex-col flex-grow min-h-0 items-center justify-center">
+    <div class="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-64">
+      <form [formGroup]="form" class="flex flex-col space-y-5">
+        <app-settings-field [title]="'Max. Workout Rounds'" [formControlName]="'maxWorkoutRounds'"></app-settings-field>
+        <app-settings-field [title]="'Max. Workout Time in Seconds'"
+                            [formControlName]="'maxWorkoutTimeInSeconds'"></app-settings-field>
+        <app-settings-field [title]="'Max. Rest Time in Seconds'"
+                            [formControlName]="'maxRestTimeInSeconds'"></app-settings-field>
+      </form>
+    </div>
+  </div>
+  <div class="flex flex-col items-center">
+    <app-button-rounded (click)="save()" class="mb-14 flex flex-col w-fit" [colorMode]="timerState.workoutMode"
                         [title]="'Save'"></app-button-rounded>
   </div>
 }

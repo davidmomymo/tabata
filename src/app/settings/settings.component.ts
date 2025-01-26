@@ -25,6 +25,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.timerStateService.setWorkoutMode('Settings');
     const timerState = this.timerStateService.getTimerState();
     this.timerState = timerState;
     this.form = this.formBuilder.group(
@@ -47,7 +48,6 @@ export class SettingsComponent implements OnInit {
       maxWorkoutRounds: this.form.get('maxWorkoutRounds')?.value,
       maxWorkoutTimeInSeconds: this.form.get('maxWorkoutTimeInSeconds')?.value,
     }
-    debugger;
     this.timerStateService.setSettings(res);
   }
 }

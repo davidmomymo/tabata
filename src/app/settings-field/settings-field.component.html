@@ -1,4 +1,6 @@
-<div *ngIf="formControl">
-  <div>{{ title()}}</div>
-  <input type="number" [placeholder]="formControl.value" [formControl]="formControl">
+<div *ngIf="formControl" class="flex flex-col rounded-lg items-center bg-sky-50 text-sky-700">
+  <div class="bg-sky-50 text-sky-700 pb-2">{{ title()}}</div>
+  <div class="py-3 flex-grow-0 flex ">
+    <input class="flex w-14 text-xl outline-none text-center text-sky-700 border-none font-bold" type="number" [placeholder]="formControl.value" [formControl]="formControl">
+  </div>
 </div>

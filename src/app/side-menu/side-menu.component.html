@@ -1,7 +1,7 @@
 @if (sideMenuState$ | async; as sideMenuState){
   <div (click)="executeSideButton()" class="absolute right-10 top-20 cursor-pointer">
     @if (timerState$ | async; as timerState){
-      <app-button-rounded [timerState]="timerState"
+      <app-button-rounded [colorMode]="timerState.workoutMode"
                           [title]="sideMenuState === 'Timer' ? 'Settings' : 'Timer'"
       ></app-button-rounded>
     }

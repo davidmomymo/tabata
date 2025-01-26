@@ -6,15 +6,15 @@
     </div>
     <div class="mb-14">
       @if (currentTimerState.timerMode === 'Start') {
-        <app-button-rounded (click)="runTimer()" [title]="'Start'" [timerState]="currentTimerState"></app-button-rounded>
+        <app-button-rounded (click)="runTimer()" [title]="'Start'" [colorMode]="currentTimerState.workoutMode"></app-button-rounded>
       }
       @if (currentTimerState.timerMode === 'Running') {
-        <app-button-rounded (click)="stopTimer()" [title]="'Stop'" [timerState]="currentTimerState"></app-button-rounded>
+        <app-button-rounded (click)="stopTimer()" [title]="'Stop'" [colorMode]="currentTimerState.workoutMode"></app-button-rounded>
       }
       @if (currentTimerState.timerMode === 'Stop') {
         <div class="flex flex-row space-x-5">
-          <app-button-rounded (click)="runTimer()" [title]="'Resume'" [timerState]="currentTimerState"></app-button-rounded>
-          <app-button-rounded (click)="restartTimer()" [title]="'Restart'" [timerState]="currentTimerState"></app-button-rounded>
+          <app-button-rounded (click)="runTimer()" [title]="'Resume'" [colorMode]="currentTimerState.workoutMode"></app-button-rounded>
+          <app-button-rounded (click)="restartTimer()" [title]="'Restart'" [colorMode]="currentTimerState.workoutMode"></app-button-rounded>
         </div>
       }
     </div>

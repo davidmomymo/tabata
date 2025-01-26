@@ -22,6 +22,7 @@ export class SideMenuComponent {
     this.sideMenuState$ = sideMenuStateService.sideMenuState$;
     this.timerState$ = timerStateService.timerState$;
   }
+
   async executeSideButton(): Promise<void> {
     await this.sideMenuStateService.switchState();
   }

@@ -1,6 +1,6 @@
 import {Component, input} from '@angular/core';
 import {NgClass} from '@angular/common';
-import {TimerState} from '../timer/timer-state.service';
+import {WorkoutMode} from '../timer/timer-state.service';
 
 @Component({
   selector: 'app-button-rounded',
@@ -11,6 +11,6 @@ import {TimerState} from '../timer/timer-state.service';
   styleUrl: './button-rounded.component.scss'
 })
 export class ButtonRoundedComponent {
-  timerState = input.required<TimerState>();
+  colorMode = input.required<WorkoutMode>();
   title = input.required<string>();
 }

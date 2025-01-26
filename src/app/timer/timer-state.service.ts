@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
-export type WorkoutMode = 'Workout' | 'Rest';
+export type WorkoutMode = 'Workout' | 'Rest' | 'Settings';
 export type TimerMode = 'Start' | 'Running' | 'Stop';
 
 export interface TimerState {
@@ -87,7 +87,6 @@ export class TimerStateService {
   }
 
   private handleCurrentWorkoutMode(state: TimerState) {
-    debugger;
     if (state.workoutMode === 'Workout' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
       state.workoutMode = 'Rest';
       state.currentTimeInSeconds = state.maxRestTimeInSeconds;
@@ -152,5 +151,10 @@ export class TimerStateService {
       timerMode: 'Start',
       currentPercentage: 0
     };
+  }
+
+  setWorkoutMode(workoutMode: WorkoutMode) {
+    const currentState = this.timerStateSubject.getValue();
+    this.timerStateSubject.next({...currentState, workoutMode: workoutMode});
   }
 }
