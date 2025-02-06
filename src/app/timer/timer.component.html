@@ -1,6 +1,10 @@
 @if (currentTimerState$ | async; as currentTimerState) {
-  <div class="flex flex-col flex-grow min-h-0  items-center" [ngClass]="{'text-emerald-50 bg-emerald-700': currentTimerState.workoutMode === 'Workout', 'bg-rose-700 text-rose-50': currentTimerState.workoutMode === 'Rest'}">
-    <div class="mt-40 text-4xl font-bold">{{currentTimerState.workoutMode === 'Workout' ? 'Workout' : 'Rest' }}</div>
+  <div class="flex flex-col flex-grow min-h-0  items-center"
+       [ngClass]="{'text-emerald-50 bg-emerald-700': currentTimerState.workoutMode === 'Workout',
+       'bg-rose-700 text-rose-50': currentTimerState.workoutMode === 'Rest',
+       'bg-amber-700 text-amber-50': currentTimerState.workoutMode === 'GetReady'}">
+    <div class="mt-40 text-4xl font-bold">{{currentTimerState.workoutMode === 'Workout' ? 'Workout'
+      : currentTimerState.workoutMode === 'Rest' ? 'Rest' : 'Get Ready' }}</div>
     <div class="flex flex-col flex-grow min-h-0 justify-center">
       <app-display-time [timerState]="currentTimerState"></app-display-time>
     </div>

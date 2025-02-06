@@ -1,18 +1,20 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
-export type WorkoutMode = 'Workout' | 'Rest' | 'Settings';
+export type WorkoutMode = 'Workout' | 'Rest' | 'Settings' | 'GetReady';
 export type TimerMode = 'Start' | 'Running' | 'Stop';
 
 export interface TimerState {
   currentTimeInSeconds: number;
   maxWorkoutTimeInSeconds: number;
   maxRestTimeInSeconds: number;
+  maxGetReadyTimeInSeconds: number;
   currentWorkoutRounds: number;
   maxWorkoutRounds: number;
   workoutMode: WorkoutMode;
   timerMode: TimerMode;
   currentPercentage: number;
+  getReady: boolean;
 }
 
 export interface TimerSettings {
@@ -29,7 +31,8 @@ export class TimerStateService {
   private maxWorkoutRounds = 10;
   private maxWorkoutTimeInSeconds = 45;
   private maxRestTimeInSeconds = 15;
-  private currentWorkoutRounds = 1;
+  private maxGetReadyTimeInSeconds = 3;
+  private currentWorkoutRounds = 0;
   private currentTimeInSeconds = 45;
 
   private initState: TimerState = {
@@ -38,9 +41,11 @@ export class TimerStateService {
     maxRestTimeInSeconds: this.maxRestTimeInSeconds,
     currentWorkoutRounds: this.currentWorkoutRounds,
     maxWorkoutRounds: this.maxWorkoutRounds,
+    maxGetReadyTimeInSeconds: this.maxGetReadyTimeInSeconds,
     workoutMode: 'Workout',
     timerMode: 'Start',
-    currentPercentage: 0
+    currentPercentage: 0,
+    getReady: true
   }
 
   private intervalTimeInMilliseconds = 10;
@@ -53,64 +58,109 @@ export class TimerStateService {
     return this.timerStateSubject.getValue();
   }
 
-  private timerStateSubject= new BehaviorSubject<TimerState>(this.getInitState());
+  private timerStateSubject = new BehaviorSubject<TimerState>(this.getInitState());
   timerState$ = this.timerStateSubject.asObservable();
   private currentTimeoutId?: ReturnType<typeof setInterval> = undefined;
-  constructor() { }
 
-  runTimer(){
-    if(this.currentTimeoutId){
+  constructor() {
+  }
+
+  runTimer() {
+    if (this.currentTimeoutId) {
       return;
     }
 
-    this.currentTimeoutId = setInterval(() => {
-      this.manageCurrentWorkoutState()
-    },this.intervalTimeInMilliseconds);
-  }
-
-  private manageCurrentWorkoutState(){
     const currentState = this.timerStateSubject.getValue();
     currentState.timerMode = 'Running';
     this.timerStateSubject.next(currentState);
-    if (currentState.currentTimeInSeconds === 0 || currentState.currentTimeInSeconds < 0) {
-      this.handleCurrentWorkoutMode(currentState);
-    }
-    else {
+
+    this.currentTimeoutId = setInterval(() => {
+      this.manageCurrentWorkoutState(currentState);
+    }, this.intervalTimeInMilliseconds);
+  }
+
+  private manageCurrentWorkoutState(currentState: TimerState) {
+    if (this.shouldSwitchCurrentWorkoutMode(currentState)) {
+      this.switchCurrentWorkoutMode(currentState);
+    } else {
       this.decreaseCurrentTimeInSeconds();
     }
   }
 
-  private getCurrentPercentage(state: TimerState): number {
-    return state.workoutMode === 'Workout' ?
-      (state.maxWorkoutTimeInSeconds - state.currentTimeInSeconds) / state.maxWorkoutTimeInSeconds * 100 :
-      (state.maxRestTimeInSeconds - state.currentTimeInSeconds) / state.maxRestTimeInSeconds * 100;
+  private shouldSwitchCurrentWorkoutMode(currentState: TimerState): boolean {
+    return currentState.currentTimeInSeconds === 0 || currentState.currentTimeInSeconds < 0 || currentState.getReady;
   }
 
-  private handleCurrentWorkoutMode(state: TimerState) {
-    if (state.workoutMode === 'Workout' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
-      state.workoutMode = 'Rest';
-      state.currentTimeInSeconds = state.maxRestTimeInSeconds;
-      state.currentPercentage = 0;
-    }
-    else if (state.workoutMode === 'Rest' && state.currentWorkoutRounds !== state.maxWorkoutRounds) {
-      state.currentWorkoutRounds += 1;
-      state.currentTimeInSeconds = state.maxWorkoutTimeInSeconds;
-      state.workoutMode = 'Workout';
-      state.currentPercentage = 0;
-    }
-    else {
+  private switchCurrentWorkoutMode(state: TimerState) {
+    if (this.shouldSwitchToGetReady(state)) {
+      this.switchToGetReady(state);
+    } else if (this.shouldSwitchToRest(state)) {
+      this.switchToRest(state);
+    } else if (this.shouldSwitchToWorkout(state)) {
+      this.switchToWorkout(state);
+    } else {
       this.stopTimer();
     }
   }
 
-  private decreaseCurrentTimeInSeconds(){
+  private shouldSwitchToWorkout(state: TimerState): boolean {
+    return state.workoutMode === 'GetReady' || state.workoutMode === 'Rest' && state.currentWorkoutRounds !== state.maxWorkoutRounds
+  }
+
+  private shouldSwitchToRest(state: TimerState): boolean {
+    return state.workoutMode === 'Workout' && state.currentWorkoutRounds !== state.maxWorkoutRounds
+  }
+
+  private shouldSwitchToGetReady(state: TimerState): boolean {
+    return state.getReady;
+  }
+
+  switchToWorkout(state: TimerState) {
+    state.currentWorkoutRounds += 1;
+    state.currentTimeInSeconds = state.maxWorkoutTimeInSeconds;
+    state.workoutMode = 'Workout';
+    state.currentPercentage = 0;
+  }
+
+  switchToRest(state: TimerState) {
+    state.workoutMode = 'Rest';
+    state.currentTimeInSeconds = state.maxRestTimeInSeconds;
+    state.currentPercentage = 0;
+  }
+
+  switchToGetReady(state: TimerState) {
+    state.getReady = false;
+    state.workoutMode = 'GetReady';
+    state.currentTimeInSeconds = state.maxGetReadyTimeInSeconds;
+    state.currentPercentage = 0;
+  }
+
+  private decreaseCurrentTimeInSeconds() {
     const currentState = this.timerStateSubject.getValue();
-    currentState.currentTimeInSeconds -= this.intervalTimeInMilliseconds / 1000 ;
+    currentState.currentTimeInSeconds -= this.intervalTimeInMilliseconds / 1000;
     currentState.currentPercentage = this.getCurrentPercentage(currentState);
     this.timerStateSubject.next(currentState);
   }
 
-  stopTimer(){
+  private getCurrentPercentage(state: TimerState): number {
+    switch (state.workoutMode) {
+      case 'Workout': {
+        return (state.maxWorkoutTimeInSeconds - state.currentTimeInSeconds) / state.maxWorkoutTimeInSeconds * 100;
+      }
+      case 'Rest': {
+        return (state.maxRestTimeInSeconds - state.currentTimeInSeconds) / state.maxRestTimeInSeconds * 100;
+      }
+      case 'GetReady': {
+        return (state.maxGetReadyTimeInSeconds - state.currentTimeInSeconds) / state.maxGetReadyTimeInSeconds * 100;
+      }
+      default: {
+        throw 'Unknown Workout Mode'
+      }
+
+    }
+  }
+
+  stopTimer() {
     clearInterval(this.currentTimeoutId);
     this.currentTimeoutId = undefined;
     const currentState = this.timerStateSubject.getValue();
@@ -118,7 +168,7 @@ export class TimerStateService {
     this.timerStateSubject.next(currentState);
   }
 
-  restartTimer(){
+  restartTimer() {
     clearInterval(this.currentTimeoutId);
     this.currentTimeoutId = undefined;
     const initState = this.getInitState();
@@ -140,16 +190,18 @@ export class TimerStateService {
     this.restartTimer();
   }
 
-  updateInitState(){
+  updateInitState() {
     this.initState = {
       currentTimeInSeconds: this.currentTimeInSeconds,
       maxWorkoutTimeInSeconds: this.maxWorkoutTimeInSeconds,
       maxRestTimeInSeconds: this.maxRestTimeInSeconds,
+      maxGetReadyTimeInSeconds: this.maxGetReadyTimeInSeconds,
       currentWorkoutRounds: this.currentWorkoutRounds,
       maxWorkoutRounds: this.maxWorkoutRounds,
       workoutMode: 'Workout',
       timerMode: 'Start',
-      currentPercentage: 0
+      currentPercentage: 0,
+      getReady: true
     };
   }
 

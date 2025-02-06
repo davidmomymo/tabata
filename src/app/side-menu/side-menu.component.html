@@ -2,7 +2,10 @@
   <div (click)="executeSideButton()" class="absolute right-5 top-24 cursor-pointer">
     @if (timerState$ | async; as timerState) {
       <div class="flex justify-center items-center rounded-full border w-10 h-10 border-emerald-50"
-           [ngClass]="{'text-emerald-50 border-emerald-50': timerState.workoutMode === 'Workout', 'text-rose-50 border-rose-50': timerState.workoutMode === 'Rest', 'text-sky-50 border-sky-50': timerState.workoutMode === 'Settings'}">
+           [ngClass]="{'text-emerald-50 border-emerald-50': timerState.workoutMode === 'Workout',
+           'text-rose-50 border-rose-50': timerState.workoutMode === 'Rest',
+           'text-sky-50 border-sky-50': timerState.workoutMode === 'Settings',
+           'text-amber-50 border-amber-50': timerState.workoutMode === 'GetReady'}">
         <fa-icon [icon]="sideMenuState === 'Timer' ? faGear : faClock"></fa-icon>
       </div>
     }

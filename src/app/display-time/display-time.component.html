@@ -6,7 +6,8 @@
                    [showSubtitle]="false"
                    [showUnits]="false"
                    [radius]="115"
-                   [outerStrokeColor]="timerState().workoutMode === 'Workout' ? '#047857' : '#be123c'"
+                   [outerStrokeColor]="timerState().workoutMode === 'Workout' ? '#047857' :
+                    timerState().workoutMode === 'Rest' ? '#be123c' : '#b45309'"
                    [innerStrokeWidth]="0"
                    [outerStrokeWidth]="10"
                    [startFromZero]="false"
@@ -15,7 +16,9 @@
                    [animationDuration]="200">
   </circle-progress>
   <div class="flex flex-col justify-center items-center rounded-full w-64 h-64"
-       [ngClass]="{'bg-emerald-50 text-emerald-700': timerState().workoutMode === 'Workout', 'bg-rose-50 text-rose-700': timerState().workoutMode === 'Rest'}">
+       [ngClass]="{'bg-emerald-50 text-emerald-700': timerState().workoutMode === 'Workout',
+       'bg-rose-50 text-rose-700': timerState().workoutMode === 'Rest',
+       'bg-amber-50 text-amber-700': timerState().workoutMode === 'GetReady'}">
     <div class="text-6xl font-bold">{{ timerState().currentTimeInSeconds | number : '1.0-0' }}</div>
     <div class="mt-4">Round {{ timerState().currentWorkoutRounds }} of {{ timerState().maxWorkoutRounds }}</div>
   </div>

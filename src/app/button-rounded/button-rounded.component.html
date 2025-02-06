@@ -1,3 +1,6 @@
 <div class="text-lg font-bold py-2 px-8 rounded-2xl"
-     [ngClass]="{'bg-gray-50 text-emerald-700': colorMode() === 'Workout', 'bg-rose-50 text-rose-700': colorMode() === 'Rest', 'bg-sky-50 text-sky-700': colorMode() === 'Settings'}">{{ title() }}
+     [ngClass]="{'bg-gray-50 text-emerald-700': colorMode() === 'Workout',
+     'bg-rose-50 text-rose-700': colorMode() === 'Rest',
+     'bg-sky-50 text-sky-700': colorMode() === 'Settings',
+     'bg-amber-50 text-amber-700': colorMode() === 'GetReady'}">{{ title() }}
 </div>
