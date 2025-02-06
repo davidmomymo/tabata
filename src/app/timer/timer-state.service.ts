@@ -31,7 +31,7 @@ export class TimerStateService {
   private maxWorkoutRounds = 10;
   private maxWorkoutTimeInSeconds = 45;
   private maxRestTimeInSeconds = 15;
-  private maxGetReadyTimeInSeconds = 3;
+  private maxGetReadyTimeInSeconds = 5;
   private currentWorkoutRounds = 0;
   private currentTimeInSeconds = 45;
 
